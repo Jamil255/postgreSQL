@@ -46,6 +46,30 @@ select*from customer c left join orders o on c.custid=o.custid;
 select *from orders o left join customer c on o.custid=c.custid;
 
 
+create table customers
+(custid serial primary key,name varchar(100) not null);
+
+create table orders
+(ordid serial primary key  
+,ord_date date default current_date,
+custid int not null,
+foreign key (custid)references customers(custid)
+);
+create table products
+(p_id serial primary key,
+p_name varchar(100)not null,
+price numeric not null
+);
+
+create table ord_items
+(item_id serial,
+ordid int not null,
+p_id int not null,
+quantity int not null,
+foreign key (ordid)references orders(ordid),
+foreign key (p_id) references products(p_id)
+
+);
 
 
 
