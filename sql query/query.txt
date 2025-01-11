@@ -1,0 +1,104 @@
+=>>postgresql query
+create database  dbname
+create table tablename(colum name)||create table admin(id int,name varchar(100),adminId int );
+insert into tablename values(data)||insert into admin values(1,'admin',11);
+/! cls
+/c dbname
+\d tablename
+/l
+select*from tablename
+select (cloumsname) from tablename
+
+=>update the data
+update admin set city=london where id=2
+
+  =>delete
+delete from tablename where id =1
+
+==>datatype
+constriant
+primary key
+ not null
+unique
+default
+check
+serial=auto increment
+most widely used 
+numeric:int
+boolen
+stirng:varchar
+date:Date
+
+ ******data refining************
+**clauses**
+where
+distinct
+order by
+limit
+like
+
+select*from employes where emp_id=9;
+in and or not in
+
+
+==>aggergation function
+count
+max
+sum
+min
+avg
+
+==>what is grouping?
+GROUP BY
+
+==>string function
+CONCAT,CONCAT_WS
+SUBSTR,
+LEFT,RIGHT
+LENGTH
+UPPER,LOWWER
+TRIM,LTRIM.RTRIM
+REPLACE
+POSITION
+STRING_AGG
+
+=>>> how to add \delete column in the table?
+alter table tbname add column age int not null
+alter table tbname drop cloumn age
+
+=>how to rename table name?
+alter table tbname rename to student
+rename table contact to mycontacts
+
+=>how to modify column?
+alter table tbname alter column cname set data type varchar(150);
+alter table tbname alter cloumn cname drop default;
+
+=>check
+alter table employes  add cloumn contact varchar(15) unique check(length(contact<=10))
+alter table employes drop constraint contact-key-constraint
+alter table employes add constraint contact varchar(15) unique check(length(contact<=10))
+
+=>expressionn case
+
+select fname,salary,
+case when salary<=50000 then 'high' else 'low' end as salary-categoriy from employes
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
