@@ -120,6 +120,19 @@ values(fname,lname,email,dept,salary,hire_date);
 end;
 $$
 
+call add_employee('loss','anle','loss@gmail.com','finance',4000);
+select *from employes;
+
+select distinct dept from employes;
+
+select e.employid,
+e.fname,
+e.salary
+from employes e where e.dept='cse' and e.salary=(select max(emp.salary)from employes emp where emp.dept='cse')
+
+
+select e.employid,e.fname,e.salary from employes e where e.dept='cse' and e.salary=(select max(emp.salary) from employes emp where emp.dept='cse')
+
 
 
 
