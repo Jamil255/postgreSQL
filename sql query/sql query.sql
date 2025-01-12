@@ -160,11 +160,52 @@ rank() over(order by salary desc)from employes;
 select fname,salary,
 dense_rank() over(order by salary desc)from employes
 
+-- cte
+
+with avg_sal as(
+select dept,avg(salary) as avg_salary from employes group by dept
+)
+
+select 
+e.employid,e.fname,e.dept,e.salary,a.avg_salary
+from employes e
+join avg_sal a on e.dept=a.dept
+where e.salary>a.avg_salary;
+
+
+with max_sal as(
+select dept,max(salary)as max_salary from employes group by dept
+)
+
+select 
+e.employid,e.fname,e.dept,e.salary
+from employes e
+join max_sal a on e.dept=a.dept
+where e.salary=a.max_salary;
 
 
 
 
+-- trigger
 
+select* from employes
+
+call edit_employee_salary(-20000,3)
+
+create or replace function check_salary()
+returns trigger as $$
+begin
+if new.salary<0 then
+new.salary=0;
+end if;
+return new;
+end;
+$$ language plpgsql;
+
+create trigger before_update_salary
+before update on employes
+for each row
+execute function check_salary();
 
 
 
