@@ -102,6 +102,24 @@ sum(total_price) as amount
 from billing_info group by rollup(product) order by  amount
 
 
+-- store proceducre
+
+create or replace procedure add_employee(
+fname varchar,
+lname varchar,
+email varchar,
+dept varchar,
+salary int
+)
+
+language plpgsql
+as $$
+begin
+insert into employes(fname,lname,email,dept,salary,hire_date)
+values(fname,lname,email,dept,salary,hire_date);
+end;
+$$
+
 
 
 
