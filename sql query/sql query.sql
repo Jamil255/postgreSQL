@@ -146,6 +146,20 @@ end;
 $$ language plpgsql;
 
 select * from dept_max_salary('finance')
+\\window function
+
+select * from dept_max_salary('finance')
+
+select fname,salary,avg(salary) over(order by round(salary))from employes;
+select row_number() over(partition  by dept),
+fname,dept,salary from employes
+
+select fname,salary ,
+rank() over(order by salary desc)from employes;
+
+select fname,salary,
+dense_rank() over(order by salary desc)from employes
+
 
 
 
