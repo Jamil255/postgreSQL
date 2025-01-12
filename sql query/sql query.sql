@@ -132,9 +132,20 @@ from employes e where e.dept='cse' and e.salary=(select max(emp.salary)from empl
 
 
 select e.employid,e.fname,e.salary from employes e where e.dept='cse' and e.salary=(select max(emp.salary) from employes emp where emp.dept='cse')
+-- // function
+create or replace function dept_max_salary(dept_name varchar)
+returns  table(employid int,fname varchar,salary int)
+as $$
+begin
+return query
+select e.employid,e.fname,e.salary from employes e
+where e.dept=dept_name and e.salary=(
+select max(emp.salary) from employes emp where emp.dept=dept_name
+);
+end;
+$$ language plpgsql;
 
-
-
+select * from dept_max_salary('finance')
 
 
 
