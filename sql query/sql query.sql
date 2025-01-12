@@ -88,6 +88,21 @@ insert into products(p_name,price)values('bat',1200),('ball',500);
 insert into ord_items(ordid,p_id,quantity)values(4,4,2),(5,5,2);
 
 
+insert into customers(name) values('khalid'),('saleh');
+insert into orders(custid)values(6),(7);
+insert into products(p_name,price)values('jeans',1600),('shoe',1500);
+insert into ord_items(ordid,p_id,quantity)values(6,6,2),(7,7,2);
+
+ select product,sum(total_price) from billing_info group by product
+ having sum(total_price)>=1000;
+
+select
+coalesce(product,'Total'),
+sum(total_price) as amount
+from billing_info group by rollup(product) order by  amount
+
+
+
 
 
 
