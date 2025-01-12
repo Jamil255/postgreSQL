@@ -71,7 +71,21 @@ foreign key (p_id) references products(p_id)
 
 );
 
+select     
+c.name as name,
+o.ord_date as order_date,
+p.p_name as product,
+p.price as price,
+oi.quantity as quantity,
+(p.price * oi.quantity) AS total_price
+from ord_items oi join products p on oi.p_id=p.p_id
+join orders o on oi.ordid=o.ordid
+join customers c on o.custid=c.custid
 
+insert into customers(name) values('majid'),('waleed');
+insert into orders(custid)values(4),(5);
+insert into products(p_name,price)values('bat',1200),('ball',500);
+insert into ord_items(ordid,p_id,quantity)values(4,4,2),(5,5,2);
 
 
 
