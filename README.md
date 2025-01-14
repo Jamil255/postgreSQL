@@ -1,176 +1,168 @@
-Here’s a structured list of **basic PostgreSQL commands** for various operations:
+# PostgreSQL Guide
+
+## **Basic Queries**
+
+### Create Database
+```sql
+CREATE DATABASE dbname;
+```
+
+### Create Table
+```sql
+CREATE TABLE tablename (
+    column_name data_type constraints
+);
+
+-- Example:
+CREATE TABLE admin (
+    id INT,
+    name VARCHAR(100),
+    adminId INT
+);
+```
+
+### Insert Data
+```sql
+INSERT INTO tablename VALUES (data);
+
+-- Example:
+INSERT INTO admin VALUES (1, 'admin', 11);
+```
+
+### Common Commands
+- **Clear screen**: `\! cls`
+- **Connect to a database**: `\c dbname`
+- **Describe a table**: `\d tablename`
+- **List all databases**: `\l`
+- **Select all rows from a table**: `SELECT * FROM tablename;`
+- **Select specific columns**: `SELECT column_name FROM tablename;`
+
+### Update Data
+```sql
+UPDATE admin SET city = 'London' WHERE id = 2;
+```
+
+### Delete Data
+```sql
+DELETE FROM tablename WHERE id = 1;
+```
 
 ---
 
-### **1. Database Operations**
-- **Create a Database**:
-  ```sql
-  CREATE DATABASE dbname;
-  ```
-- **Connect to a Database**:
-  ```sql
-  \c dbname
-  ```
-- **List All Databases**:
-  ```sql
-  \l
-  ```
-- **Drop a Database**:
-  ```sql
-  DROP DATABASE dbname;
-  ```
+## **Data Types and Constraints**
+
+### Common Data Types
+- **Integer**: `INT`
+- **Boolean**: `BOOLEAN`
+- **String**: `VARCHAR`
+- **Date**: `DATE`
+
+### Constraints
+- **Primary Key**: Ensures unique identification of rows.
+- **Not Null**: Prevents NULL values.
+- **Unique**: Ensures all values in a column are unique.
+- **Default**: Sets a default value for the column.
+- **Check**: Ensures values meet a specific condition.
+- **Serial**: Auto-increment for primary keys.
 
 ---
 
-### **2. Table Operations**
-- **Create a Table**:
-  ```sql
-  CREATE TABLE tablename (
-      id SERIAL PRIMARY KEY,
-      name VARCHAR(100) NOT NULL,
-      email VARCHAR(100) UNIQUE
-  );
-  ```
-- **View All Tables**:
-  ```sql
-  \dt
-  ```
-- **View Table Schema**:
-  ```sql
-  \d tablename
-  ```
-- **Drop a Table**:
-  ```sql
-  DROP TABLE tablename;
-  ```
+## **Data Refining**
+
+### Clauses
+- **WHERE**: Filter rows based on a condition.
+- **DISTINCT**: Remove duplicate rows.
+- **ORDER BY**: Sort rows.
+- **LIMIT**: Limit the number of rows returned.
+- **LIKE**: Match patterns in strings.
+
+Example:
+```sql
+SELECT * FROM employees WHERE emp_id = 9;
+SELECT DISTINCT column_name FROM tablename;
+SELECT * FROM tablename ORDER BY column_name DESC LIMIT 10;
+```
+
+### Logical Operators
+- `AND`, `OR`, `NOT`, `IN`
 
 ---
 
-### **3. Insert, Select, Update, and Delete Operations**
-- **Insert Data**:
-  ```sql
-  INSERT INTO tablename (column1, column2) VALUES ('value1', 'value2');
-  ```
-- **Select Data**:
-  ```sql
-  SELECT * FROM tablename;
-  SELECT column1, column2 FROM tablename;
-  ```
-- **Update Data**:
-  ```sql
-  UPDATE tablename
-  SET column1 = 'new_value'
-  WHERE condition;
-  ```
-- **Delete Data**:
-  ```sql
-  DELETE FROM tablename
-  WHERE condition;
-  ```
+## **Aggregation Functions**
+- `COUNT()`: Counts rows.
+- `MAX()`: Finds the maximum value.
+- `SUM()`: Sums values.
+- `MIN()`: Finds the minimum value.
+- `AVG()`: Calculates the average.
 
 ---
 
-### **4. Constraints**
-- **Add Common Constraints While Creating a Table**:
-  ```sql
-  CREATE TABLE example (
-      id SERIAL PRIMARY KEY,
-      name VARCHAR(50) NOT NULL,
-      email VARCHAR(100) UNIQUE,
-      created_at DATE DEFAULT CURRENT_DATE
-  );
-  ```
+## **Grouping**
+```sql
+SELECT column_name, COUNT(*) FROM tablename GROUP BY column_name;
+```
 
 ---
 
-### **5. Filtering and Conditions**
-- **Using WHERE**:
-  ```sql
-  SELECT * FROM tablename WHERE column1 = 'value';
-  ```
-- **Using ORDER BY**:
-  ```sql
-  SELECT * FROM tablename ORDER BY column1 ASC;
-  ```
-- **Using LIMIT**:
-  ```sql
-  SELECT * FROM tablename LIMIT 10;
-  ```
+## **String Functions**
+- `CONCAT()`, `CONCAT_WS()`
+- `SUBSTR()`, `LEFT()`, `RIGHT()`
+- `LENGTH()`
+- `UPPER()`, `LOWER()`
+- `TRIM()`, `LTRIM()`, `RTRIM()`
+- `REPLACE()`
+- `POSITION()`
+- `STRING_AGG()`
+
+Example:
+```sql
+SELECT CONCAT(first_name, ' ', last_name) AS full_name FROM employees;
+```
 
 ---
 
-### **6. Alter Table Operations**
-- **Add a Column**:
-  ```sql
-  ALTER TABLE tablename ADD COLUMN new_column VARCHAR(50);
-  ```
-- **Modify a Column**:
-  ```sql
-  ALTER TABLE tablename ALTER COLUMN column_name TYPE new_data_type;
-  ```
-- **Drop a Column**:
-  ```sql
-  ALTER TABLE tablename DROP COLUMN column_name;
-  ```
+## **Table Alterations**
+
+### Add or Delete a Column
+```sql
+ALTER TABLE tablename ADD COLUMN age INT NOT NULL;
+ALTER TABLE tablename DROP COLUMN age;
+```
+
+### Rename Table
+```sql
+ALTER TABLE tablename RENAME TO new_table_name;
+-- Example:
+RENAME TABLE contact TO mycontacts;
+```
+
+### Modify Column
+```sql
+ALTER TABLE tablename ALTER COLUMN column_name SET DATA TYPE VARCHAR(150);
+ALTER TABLE tablename ALTER COLUMN column_name DROP DEFAULT;
+```
 
 ---
 
-### **7. Joins**
-- **Inner Join**:
-  ```sql
-  SELECT a.column1, b.column2
-  FROM table1 a
-  INNER JOIN table2 b ON a.common_column = b.common_column;
-  ```
-- **Left Join**:
-  ```sql
-  SELECT a.column1, b.column2
-  FROM table1 a
-  LEFT JOIN table2 b ON a.common_column = b.common_column;
-  ```
+## **Constraints**
+
+### Add Constraints
+```sql
+ALTER TABLE employees ADD COLUMN contact VARCHAR(15) UNIQUE CHECK (LENGTH(contact) <= 10);
+```
+
+### Drop Constraints
+```sql
+ALTER TABLE employees DROP CONSTRAINT contact_key_constraint;
+```
 
 ---
 
-### **8. Indexing**
-- **Create an Index**:
-  ```sql
-  CREATE INDEX index_name ON tablename(column_name);
-  ```
-- **Drop an Index**:
-  ```sql
-  DROP INDEX index_name;
-  ```
-
----
-
-### **9. Transactions**
-- **Begin a Transaction**:
-  ```sql
-  BEGIN;
-  ```
-- **Commit a Transaction**:
-  ```sql
-  COMMIT;
-  ```
-- **Rollback a Transaction**:
-  ```sql
-  ROLLBACK;
-  ```
-
----
-
-### **10. Miscellaneous Commands**
-- **Check PostgreSQL Version**:
-  ```sql
-  SELECT version();
-  ```
-- **Exit the PostgreSQL CLI**:
-  ```sql
-  \q
-  ```
-- **Clear Screen**:
-  ```sql
-  /! cls
-  ```
-
----
+## **Case Expressions**
+```sql
+SELECT fname, salary,
+CASE 
+    WHEN salary <= 50000 THEN 'High'
+    ELSE 'Low'
+END AS salary_category
+FROM employees;
