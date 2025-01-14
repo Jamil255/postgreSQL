@@ -166,3 +166,123 @@ CASE
     ELSE 'Low'
 END AS salary_category
 FROM employees;
+```
+
+---
+
+## **Stored Procedures**
+
+### Create Procedure
+```sql
+CREATE OR REPLACE PROCEDURE add_employee(
+    fname VARCHAR,
+    lname VARCHAR,
+    email VARCHAR,
+    dept VARCHAR,
+    salary INT
+)
+LANGUAGE plpgsql
+AS $$
+BEGIN
+    INSERT INTO employees(fname, lname, email, dept, salary, hire_date)
+    VALUES(fname, lname, email, dept, salary, hire_date);
+END;
+$$;
+
+CALL add_employee('loss', 'anle', 'loss@gmail.com', 'finance', 4000);
+SELECT * FROM employees;
+SELECT DISTINCT dept FROM employees;
+```
+
+### Nested Query Example
+```sql
+SELECT e.employid, e.fname, e.salary
+FROM employees e
+WHERE e.dept = 'cse' AND e.salary = (
+    SELECT MAX(emp.salary) FROM employees emp WHERE emp.dept = 'cse'
+);
+```
+
+---
+
+## **Functions**
+
+### Create Function
+```sql
+CREATE OR REPLACE FUNCTION dept_max_salary(dept_name VARCHAR)
+RETURNS TABLE(employid INT, fname VARCHAR, salary INT)
+AS $$
+BEGIN
+    RETURN QUERY
+    SELECT e.employid, e.fname, e.salary FROM employees e
+    WHERE e.dept = dept_name AND e.salary = (
+        SELECT MAX(emp.salary) FROM employees emp WHERE emp.dept = dept_name
+    );
+END;
+$$ LANGUAGE plpgsql;
+
+SELECT * FROM dept_max_salary('finance');
+```
+
+---
+
+## **Window Functions**
+
+### Examples
+```sql
+SELECT fname, salary, AVG(salary) OVER(ORDER BY ROUND(salary)) FROM employees;
+
+SELECT ROW_NUMBER() OVER(PARTITION BY dept), fname, dept, salary FROM employees;
+
+SELECT fname, salary, RANK() OVER(ORDER BY salary DESC) FROM employees;
+
+SELECT fname, salary, DENSE_RANK() OVER(ORDER BY salary DESC) FROM employees;
+```
+
+---
+
+## **Common Table Expressions (CTE)**
+
+### Example: Average Salary
+```sql
+WITH avg_sal AS (
+    SELECT dept, AVG(salary) AS avg_salary FROM employees GROUP BY dept
+)
+SELECT e.employid, e.fname, e.dept, e.salary, a.avg_salary
+FROM employees e
+JOIN avg_sal a ON e.dept = a.dept
+WHERE e.salary > a.avg_salary;
+```
+
+### Example: Maximum Salary
+```sql
+WITH max_sal AS (
+    SELECT dept, MAX(salary) AS max_salary FROM employees GROUP BY dept
+)
+SELECT e.employid, e.fname, e.dept, e.salary
+FROM employees e
+JOIN max_sal a ON e.dept = a.dept
+WHERE e.salary = a.max_salary;
+```
+
+---
+
+## **Triggers**
+
+### Example: Check Salary Trigger
+```sql
+CREATE OR REPLACE FUNCTION check_salary()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF NEW.salary < 0 THEN
+        NEW.salary = 0;
+    END IF;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER before_update_salary
+BEFORE UPDATE ON employees
+FOR EACH ROW
+EXECUTE FUNCTION check_salary();
+```
